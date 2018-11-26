@@ -1,25 +1,23 @@
-from selenium import webdriver
 import csv
-from constants import LONDON_POSTCODES
+from constants import LONDON_POSTCODES, BROWSER, POSTCODE_CSV
 
 
-browser = webdriver.Firefox()
 slugs = []
 
 
 def pull_all_slugs():
     for code in LONDON_POSTCODES:
-        browser.implicitly_wait(3)
-        browser.get('https://www.just-eat.co.uk/')
-        browser.find_element_by_id('postcode').clear()
-        browser.find_element_by_id('postcode').send_keys(code + '0AA')
-        browser.find_element_by_class_name('o-btn--primary').click()
-        slugs.append(_url_to_slug(browser))
-    browser.close()
+        BROWSER.implicitly_wait(3)
+        BROWSER.get('https://www.just-eat.co.uk/')
+        BROWSER.find_element_by_id('postcode').clear()
+        BROWSER.find_element_by_id('postcode').send_keys(code + '0AA')
+        BROWSER.find_element_by_class_name('o-btn--primary').click()
+        slugs.append(_url_to_slug(BROWSER))
+    BROWSER.close()
 
 
 def write_slugs_to_csv():
-    with open('/Users/muzzialdean/Muzzi/web_scraper/csv/je_postcode_slugs.csv', 'w+') as csvfile:
+    with open(POSTCODE_CSV, 'w+') as csvfile:
         slug_writer = csv.writer(csvfile)
         for slug in slugs:
             if '-' in slug:
