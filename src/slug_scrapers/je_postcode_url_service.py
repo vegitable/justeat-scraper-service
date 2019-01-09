@@ -1,31 +1,32 @@
 import csv
-from constants import LONDON_POSTCODES, BROWSER, POSTCODE_CSV
+from constants import LONDON_POSTCODES, POSTCODE_CSV
 
 
 slugs = []
+BROWSER = webdriver.Firefox()
 
 
 def pull_all_slugs():
     for code in LONDON_POSTCODES:
         BROWSER.implicitly_wait(3)
-        BROWSER.get('https://www.just-eat.co.uk/')
-        BROWSER.find_element_by_id('postcode').clear()
-        BROWSER.find_element_by_id('postcode').send_keys(code + '0AA')
-        BROWSER.find_element_by_class_name('o-btn--primary').click()
+        BROWSER.get("https://www.just-eat.co.uk/")
+        BROWSER.find_element_by_id("postcode").clear()
+        BROWSER.find_element_by_id("postcode").send_keys(code + "0AA")
+        BROWSER.find_element_by_class_name("o-btn--primary").click()
         slugs.append(_url_to_slug(BROWSER))
     BROWSER.close()
 
 
 def write_slugs_to_csv():
-    with open(POSTCODE_CSV, 'w+') as csvfile:
+    with open(POSTCODE_CSV, "w+") as csvfile:
         slug_writer = csv.writer(csvfile)
         for slug in slugs:
-            if '-' in slug:
+            if "-" in slug:
                 slug_writer.writerow([slug])
 
 
 def _url_to_slug(browser):
-    return browser.current_url.split('/')[-1]
+    return browser.current_url.split("/")[-1]
 
 
 def main():
@@ -33,5 +34,5 @@ def main():
     write_slugs_to_csv()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
